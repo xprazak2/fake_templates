@@ -1,5 +1,5 @@
 <%#
-name: Package Action Fake
+name: Package Action Fake clone
 job_category: Packages
 description_format: "%{action} package(s) %{package}"
 snippet: false
@@ -9,21 +9,16 @@ template_inputs:
   input_type: user
   description: A script to run prior to the package action
   advanced: true
-- name: package
-  required: false
-  input_type: user
-  description: The name of the package, if any
-  advanced: false
 - name: action
   required: true
   input_type: user
   description: 'The package action: install, update, or remove'
-  options: |-
-    install
-    update
-    remove
-    group install
-    group remove
+  options: "install\r\nupdate\r\nremove\r\ngroup install\r\ngroup remove"
+  advanced: false
+- name: package
+  required: false
+  input_type: user
+  description: The name of the package, if any
   advanced: false
 - name: post_script
   required: false

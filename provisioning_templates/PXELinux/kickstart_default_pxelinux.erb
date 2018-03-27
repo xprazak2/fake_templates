@@ -1,17 +1,18 @@
 <%#
-name: A fake pxelinux
+name: Kickstart default PXELinux
 snippet: false
 model: ProvisioningTemplate
 kind: PXELinux
 oses:
 - CentOS
+- CentosOS_bonds
 %>
 # This file was deployed via '<%= template_name %>' template
 
 <%
   major = @host.operatingsystem.major.to_i
   mac = @host.provision_interface.mac
-  # penenene
+
   # Tell Anaconda to perform network functions with boot interface
   #  both current and legacy syntax provided
   options = ["network", "ksdevice=bootif", "ks.device=bootif"]

@@ -1,17 +1,15 @@
 <%#
-name: A fake pxelinux
+name: Kickstart default PXEGrub
 snippet: false
 model: ProvisioningTemplate
-kind: PXELinux
-oses:
-- CentOS
+kind: PXEGrub
 %>
 # This file was deployed via '<%= template_name %>' template
 
 <%
   major = @host.operatingsystem.major.to_i
   mac = @host.provision_interface.mac
-  # penenene
+
   # Tell Anaconda to perform network functions with boot interface
   #  both current and legacy syntax provided
   options = ["network", "ksdevice=bootif", "ks.device=bootif"]
@@ -36,7 +34,7 @@ oses:
       dns.push(subnet.dns_secondary)
     end
     if (@host.operatingsystem.name.match(/Fedora/i) && major < 17) || major < 7
-      # old Anacoda found in Fedora 16 or RHEL 6 and older
+      # old Anaconda found in Fedora 16 or RHEL 6 and older
       dns_servers = dns.join(',')
       options.push("ip=#{ip}", "netmask=#{mask}", "gateway=#{gw}", "dns=#{dns_servers}")
     else
@@ -51,7 +49,7 @@ oses:
   if @host.operatingsystem.name.match(/Atomic/i)
     options.push("inst.repo=#{@host.operatingsystem.medium_uri(@host)}")
   end
-  
+
   if host_param('blacklist')
     options.push("modprobe.blacklist=" + host_param('blacklist').gsub(' ', ''))
   end
@@ -59,10 +57,10 @@ oses:
   ksoptions = options.join(' ')
 -%>
 
-TIMEOUT <%= host_param('loader_timeout') || 10 %>
-DEFAULT <%= template_name %>
+default=0
+timeout=<%= host_param('loader_timeout') || 10 %>
 
-LABEL <%= template_name %>
-  KERNEL <%= @kernel %>
-  APPEND initrd=<%= @initrd %> ks=<%= foreman_url('provision') %> <%= pxe_kernel_options %> <%= ksoptions %>
-  IPAPPEND 2
+title <%= template_name %>
+  root (nd)
+  kernel (nd)/../<%= @kernel %> ks=<%= foreman_url('provision') %> <%= pxe_kernel_options %> <%= ksoptions %>
+  initrd (nd)/../<%= @initrd %>

@@ -1,17 +1,15 @@
 <%#
-name: A fake pxelinux
+name: Kickstart default PXEGrub2
 snippet: false
 model: ProvisioningTemplate
-kind: PXELinux
-oses:
-- CentOS
+kind: PXEGrub2
 %>
 # This file was deployed via '<%= template_name %>' template
 
 <%
   major = @host.operatingsystem.major.to_i
   mac = @host.provision_interface.mac
-  # penenene
+
   # Tell Anaconda to perform network functions with boot interface
   #  both current and legacy syntax provided
   options = ["network", "ksdevice=bootif", "ks.device=bootif"]
@@ -51,7 +49,7 @@ oses:
   if @host.operatingsystem.name.match(/Atomic/i)
     options.push("inst.repo=#{@host.operatingsystem.medium_uri(@host)}")
   end
-  
+
   if host_param('blacklist')
     options.push("modprobe.blacklist=" + host_param('blacklist').gsub(' ', ''))
   end
@@ -59,10 +57,10 @@ oses:
   ksoptions = options.join(' ')
 -%>
 
-TIMEOUT <%= host_param('loader_timeout') || 10 %>
-DEFAULT <%= template_name %>
+set default=0
+set timeout=<%= host_param('loader_timeout') || 10 %>
 
-LABEL <%= template_name %>
-  KERNEL <%= @kernel %>
-  APPEND initrd=<%= @initrd %> ks=<%= foreman_url('provision') %> <%= pxe_kernel_options %> <%= ksoptions %>
-  IPAPPEND 2
+menuentry '<%= template_name %>' {
+  linuxefi <%= @kernel %> ks=<%= foreman_url('provision') %> <%= pxe_kernel_options %> <%= ksoptions %>
+  initrdefi <%= @initrd %>
+}

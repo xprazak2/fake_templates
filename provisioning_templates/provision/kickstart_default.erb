@@ -1,12 +1,11 @@
 <%#
-name: A fake provision
+name: Kickstart default
 snippet: false
 model: ProvisioningTemplate
 kind: provision
 oses:
-- CentOS
+- CentosOS_bonds
 %>
-# random change again
 <%#
 This template accepts the following parameters:
 - lang: string (default="en_US.UTF-8")
@@ -158,7 +157,9 @@ echo 'proxy = <%= proxy_uri %>' >> /etc/yum.conf
 <%= snippet 'epel' -%>
 <% end -%>
 
-<% if @host.info['parameters']['realm'] && @host.realm && @host.realm.realm_type == 'FreeIPA' -%>
+<%= snippet 'redhat_register' %>
+
+<% if host_enc['parameters']['realm'] && @host.realm && @host.realm.realm_type == 'FreeIPA' -%>
 <%= snippet 'freeipa_register' %>
 <% end -%>
 
@@ -194,14 +195,7 @@ yum -t -y remove kernel-uek*
 sed -e 's/DEFAULTKERNEL=kernel-uek/DEFAULTKERNEL=kernel/g' -i /etc/sysconfig/kernel
 <% end -%>
 
-<% if realm_compatible && host_param_true?('ansible_tower_provisioning') %>
-# This is RHEL7 specific code, as it uses systemctl, replace with
-# chkconfig or an @boot cron if you run RHEL5 or RHEL6
-<%= save_to_file('/etc/systemd/system/ansible-callback.service',
-                 snippet('ansible_tower_callback_service')) %>
-# Runs during first boot, removes itself
-/usr/bin/systemctl enable ansible-callback
-<% end -%>
+<%= snippet('ansible_provisioning_callback') %>
 
 sync
 

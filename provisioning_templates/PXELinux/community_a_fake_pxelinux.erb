@@ -1,5 +1,5 @@
 <%#
-name: A fake pxelinux
+name: Community A fake pxelinux
 snippet: false
 model: ProvisioningTemplate
 kind: PXELinux
@@ -11,7 +11,7 @@ oses:
 <%
   major = @host.operatingsystem.major.to_i
   mac = @host.provision_interface.mac
-  # penenene
+
   # Tell Anaconda to perform network functions with boot interface
   #  both current and legacy syntax provided
   options = ["network", "ksdevice=bootif", "ks.device=bootif"]

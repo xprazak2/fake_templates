@@ -4,7 +4,7 @@ snippet: false
 model: ProvisioningTemplate
 kind: provision
 %>
-# random change again
+# random change again for export
 <%#
 This template accepts the following parameters:
 - lang: string (default="en_US.UTF-8")
@@ -208,5 +208,4 @@ echo "Informing Foreman that we are built"
 wget -q -O /dev/null --no-check-certificate <%= foreman_url('built') %>
 ) 2>&1 | tee /root/install.post.log
 exit 0
-
 <%= section_end -%>

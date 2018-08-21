@@ -2,6 +2,13 @@
 name: saltstack_minion
 snippet: true
 model: ProvisioningTemplate
+organizations:
+- clash
+- clash_a
+- clash_b
+- Default Organization
+locations:
+- Default Location
 %>
 master: <%= host_param('salt_master') %>
 log_level: warning

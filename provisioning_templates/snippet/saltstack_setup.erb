@@ -2,6 +2,13 @@
 name: saltstack_setup
 snippet: true
 model: ProvisioningTemplate
+organizations:
+- clash
+- clash_a
+- clash_b
+- Default Organization
+locations:
+- Default Location
 %>
 <%
 etc_path = (@host.operatingsystem.family == 'Freebsd') ? '/usr/local/etc/salt' : '/etc/salt'

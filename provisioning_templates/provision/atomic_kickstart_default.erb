@@ -3,6 +3,13 @@ name: Atomic Kickstart default
 snippet: false
 model: ProvisioningTemplate
 kind: provision
+organizations:
+- clash
+- clash_a
+- clash_b
+- Default Organization
+locations:
+- Default Location
 %>
 
 lang <%= host_param('lang') || 'en_US.UTF-8' %>
@@ -16,7 +23,7 @@ timezone --utc <%= host_param('time-zone') || 'UTC' %>
 <% dhcp = !@static -%>
 <% end -%>
 
-network --bootproto <%= dhcp ? 'dhcp' : "static --ip=#{@host.ip} --netmask=#{subnet.mask} --gateway=#{subnet.gateway} --nameserver=#{[subnet.dns_primary, subnet.dns_secondary].select{ |item| item.present? }.join(',')}" %> --hostname <%= @host %><%= " --device=#{@host.mac}" -%>
+network --bootproto <%= dhcp ? 'dhcp' : "static --ip=#{@host.ip} --netmask=#{subnet.mask} --gateway=#{subnet.gateway} --nameserver=#{[subnet.dns_primary, subnet.dns_secondary].select{ |item| item.present? }.join(',')} --mtu=#{subnet.mtu.to_s}" %> --hostname <%= @host %><%= " --device=#{@host.mac}" -%>
 
 # Partition table should create /boot and a volume atomicos
 <% if @dynamic -%>
@@ -44,6 +51,7 @@ rootpw --iscrypted <%= root_pass %>
 reboot
 
 %post
+<%= snippet 'redhat_register' %>
 <%= snippet('remote_execution_ssh_keys') %>
 (
 # Report success back to Foreman

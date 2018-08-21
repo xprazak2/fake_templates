@@ -2,6 +2,13 @@
 name: create_users
 snippet: true
 model: ProvisioningTemplate
+organizations:
+- clash
+- clash_a
+- clash_b
+- Default Organization
+locations:
+- Default Location
 %>
 <%- users = @host.owner_type == 'Usergroup' ? @host.owner.all_users : [@host.owner] -%>
 <%- users.each do |user| -%>

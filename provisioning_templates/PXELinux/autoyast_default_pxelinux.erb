@@ -3,6 +3,13 @@ name: AutoYaST default PXELinux
 snippet: false
 model: ProvisioningTemplate
 kind: PXELinux
+organizations:
+- clash
+- clash_a
+- clash_b
+- Default Organization
+locations:
+- Default Location
 %>
 <% http_proxy_string = host_param('http-proxy') ? "proxy=http://" + host_param('http-proxy') + ":" + host_param('http-proxy-port') : '' -%>
 

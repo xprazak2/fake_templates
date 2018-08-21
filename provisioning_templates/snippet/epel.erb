@@ -2,6 +2,13 @@
 name: epel
 snippet: true
 model: ProvisioningTemplate
+organizations:
+- clash
+- clash_a
+- clash_b
+- Default Organization
+locations:
+- Default Location
 %>
 <%
 repo_base  = host_param('epel-repo-base') ? host_param('epel-repo-base') : 'https://dl.fedoraproject.org/pub/epel'

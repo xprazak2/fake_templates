@@ -3,6 +3,15 @@ name: Kickstart default PXEGrub
 snippet: false
 model: ProvisioningTemplate
 kind: PXEGrub
+oses:
+- RedHat
+organizations:
+- clash
+- clash_a
+- clash_b
+- Default Organization
+locations:
+- Default Location
 %>
 # This file was deployed via '<%= template_name %>' template
 

@@ -1,0 +1,27 @@
+<%#
+name: Power Action - Ansible Default
+snippet: false
+model: JobTemplate
+job_category: Ansible Power
+description_format: "%{action} host"
+template_inputs:
+- name: action
+  required: true
+  input_type: user
+  description: Action to perform on the service
+  options: "restart\r\nshutdown"
+  advanced: false
+provider_type: Ansible
+kind: job_template
+%>
+
+---
+- hosts: all
+  tasks:
+    - command: |
+        <%= case input('action')
+          when 'restart'
+            'shutdown -r +1'
+          else
+            'shutdown -h +1'
+          end %>

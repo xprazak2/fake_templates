@@ -2,6 +2,13 @@
 name: puppetlabs_repo
 snippet: true
 model: ProvisioningTemplate
+organizations:
+- clash
+- clash_a
+- clash_b
+- Default Organization
+locations:
+- Default Location
 %>
 <%
 http_proxy   = host_param('http-proxy') ? " --httpproxy #{host_param('http-proxy')}" : nil

@@ -3,6 +3,13 @@ name: XenServer default finish
 snippet: false
 model: ProvisioningTemplate
 kind: finish
+organizations:
+- clash
+- clash_a
+- clash_b
+- Default Organization
+locations:
+- Default Location
 %>
 #!/bin/bash
 /usr/bin/wget --output-document=/dev/null <%= foreman_url('built') %>

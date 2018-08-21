@@ -3,6 +3,13 @@ name: XenServer default
 snippet: false
 model: Ptable
 os_family: Xenserver
+organizations:
+- clash
+- clash_a
+- clash_b
+- Default Organization
+locations:
+- Default Location
 %>
 <%
   gueststorage = host_param('gueststorage') || 'yes'

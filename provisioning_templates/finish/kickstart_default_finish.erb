@@ -3,6 +3,15 @@ name: Kickstart default finish
 snippet: false
 model: ProvisioningTemplate
 kind: finish
+oses:
+- RedHat
+organizations:
+- clash
+- clash_a
+- clash_b
+- Default Organization
+locations:
+- Default Location
 %>
   <%#
   This template accepts the following parameters:
@@ -45,6 +54,8 @@ yum -y install ntpdate
 <% if rhel_compatible && !host_param_false?('enable-epel') -%>
 <%= snippet 'epel' -%>
 <% end -%>
+
+<%= snippet 'redhat_register' %>
 
 <% if host_enc['parameters']['realm'] && @host.realm && @host.realm.realm_type == 'FreeIPA' -%>
 <%= snippet 'freeipa_register' %>

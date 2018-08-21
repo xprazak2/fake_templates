@@ -2,6 +2,13 @@
 name: fix_hosts
 snippet: true
 model: ProvisioningTemplate
+organizations:
+- clash
+- clash_a
+- clash_b
+- Default Organization
+locations:
+- Default Location
 %>
 echo "<%= @host.shortname %>" > /etc/hostname
 hostname <%= @host.shortname %>

@@ -1,0 +1,23 @@
+<%#
+name: Run Command - Ansible Default
+snippet: false
+model: JobTemplate
+job_category: Ansible Commands
+description_format: Run %{command}
+template_inputs:
+- name: command
+  required: true
+  input_type: user
+  description: "Command to run on the host, e.g: \r\n\r\nmkdir helloworld"
+  advanced: false
+provider_type: Ansible
+kind: job_template
+%>
+
+---
+- hosts: all
+  tasks:
+    - shell: |
+<%=     indent(8) { input('command') } %>
+      register: out
+    - debug: var=out

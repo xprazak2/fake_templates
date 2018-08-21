@@ -2,6 +2,13 @@
 name: chef_client
 snippet: true
 model: ProvisioningTemplate
+organizations:
+- clash
+- clash_a
+- clash_b
+- Default Organization
+locations:
+- Default Location
 %>
 echo "Bootstraping chef"
 <%= snippet_if_exists(host_param('chef_bootstrap_template') || 'chef-client omnibus bootstrap') %>

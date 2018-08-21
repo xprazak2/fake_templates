@@ -5,8 +5,14 @@ snippet: false
 model: ProvisioningTemplate
 kind: iPXE
 oses:
-- CentOS
-- CentosOS_bonds
+- RedHat
+organizations:
+- clash
+- clash_a
+- clash_b
+- Default Organization
+locations:
+- Default Location
 %>
 
 <% subnet = @host.subnet -%>

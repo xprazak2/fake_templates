@@ -3,6 +3,13 @@ name: PXELinux chain iPXE UNDI
 snippet: false
 model: ProvisioningTemplate
 kind: PXELinux
+organizations:
+- clash
+- clash_a
+- clash_b
+- Default Organization
+locations:
+- Default Location
 %>
 <%#
 Chainboots iPXE/gPXE from PXELinux via UNDI. Make sure the OS has an iPXE

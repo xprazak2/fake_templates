@@ -3,6 +3,13 @@ name: Preseed custom LVM
 snippet: false
 model: Ptable
 os_family: Debian
+organizations:
+- clash
+- clash_a
+- clash_b
+- Default Organization
+locations:
+- Default Location
 %>
 <%
   partitioning_method = host_param('partitioning-method') ? host_param('partitioning-method') : 'lvm'

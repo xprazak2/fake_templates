@@ -1,17 +1,35 @@
 <%#
-name: A fake provision
+name: A fake provision org E
 snippet: false
 model: ProvisioningTemplate
 kind: provision
-oses:
-- CentOS
 organizations:
+- OrgE
 - OrgF
 - OrgH
 locations:
 - LocA
 %>
-hold your hands into the sky
+# random change again
+<%#
+This template accepts the following parameters:
+- lang: string (default="en_US.UTF-8")
+- selinux-mode: string (default="enforcing")
+- keyboard: string (default="us")
+- time-zone: string (default="UTC")
+- http-proxy: string (default="")
+- http-proxy-port: string (default="")
+- force-puppet: boolean (default=false)
+- enable-epel: boolean (default=true)
+- enable-puppetlabs-repo: boolean (default=false)
+- enable-puppetlabs-pc1-repo: boolean (default=false)
+- salt_master: string (default=undef)
+- ntp-server: string (default="0.fedora.pool.ntp.org")
+- bootloader-append: string (default="nofb quiet splash=quiet")
+- disable-firewall: boolean (default=false)
+- package_upgrade: boolean (default=true)
+- disable-uek: boolean (default=false)
+%>
 <%
   rhel_compatible = @host.operatingsystem.family == 'Redhat' && @host.operatingsystem.name != 'Fedora'
   os_major = @host.operatingsystem.major.to_i

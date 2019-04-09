@@ -1,0 +1,21 @@
+<%#
+name: WAIK default PXELinux
+snippet: false
+model: ProvisioningTemplate
+kind: PXELinux
+organizations:
+- Default Organization
+- OrgB
+- OrgC
+- OrgF
+- OrgG
+- this is very very very very very very very very very very very very very very very
+  very very very long name
+locations:
+- LocA
+- US/AWS
+%>
+DEFAULT winPE
+
+LABEL winPE
+    KERNEL /Boot/startrom.0

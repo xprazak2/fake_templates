@@ -1,0 +1,28 @@
+<%#
+name: Kickstart default
+snippet: false
+model: Ptable
+os_family: Redhat
+organizations:
+- Default Organization
+- OrgA
+- OrgC
+- OrgE
+- OrgF
+- OrgG
+- this is very very very very very very very very very very very very very very very
+  very very very long name
+locations:
+- Default Location
+- LocA
+- LocB
+- LocD
+- LocE
+- LocF
+- UK
+- US
+- US/AWS
+%>
+zerombr
+clearpart --all --initlabel
+autopart <%= host_param('autopart_options') %>

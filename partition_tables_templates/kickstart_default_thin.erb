@@ -1,9 +1,9 @@
 <%#
-name: Kickstart fake
+name: Kickstart default thin
 snippet: false
 model: Ptable
+os_family: Redhat
 organizations:
-- Default Organization
 - OrgA
 - OrgF
 locations:
@@ -12,4 +12,4 @@ locations:
 %>
 zerombr
 clearpart --all --initlabel
-autopart
+autopart --type=thinp <%= host_param('autopart_options') %>

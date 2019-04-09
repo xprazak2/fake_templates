@@ -1,0 +1,19 @@
+<%#
+name: XenServer default finish
+snippet: false
+model: ProvisioningTemplate
+kind: finish
+organizations:
+- Default Organization
+- OrgB
+- OrgC
+- OrgF
+- OrgG
+- this is very very very very very very very very very very very very very very very
+  very very very long name
+locations:
+- LocA
+- US/AWS
+%>
+#!/bin/bash
+/usr/bin/wget --output-document=/dev/null <%= foreman_url('built') %>

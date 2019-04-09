@@ -1,0 +1,30 @@
+<%#
+name: XenServer default
+snippet: false
+model: Ptable
+os_family: Xenserver
+organizations:
+- Default Organization
+- OrgA
+- OrgC
+- OrgE
+- OrgF
+- OrgG
+- this is very very very very very very very very very very very very very very very
+  very very very long name
+locations:
+- Default Location
+- LocA
+- LocB
+- LocD
+- LocE
+- LocF
+- UK
+- US
+- US/AWS
+%>
+<%
+  gueststorage = host_param('gueststorage') || 'yes'
+  primary_disk = host_param('install-disk') || 'sda'
+-%>
+  <primary-disk gueststorage="<%= gueststorage %>"><%= primary_disk %></primary-disk>

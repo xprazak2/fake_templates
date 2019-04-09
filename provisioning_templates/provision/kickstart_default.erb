@@ -1,20 +1,50 @@
 <%#
-name: A fake provision
+name: Kickstart default
 snippet: false
 model: ProvisioningTemplate
 kind: provision
 oses:
 - CentOS
+- CentOS_bonds_again
+- CentOSGC
+- CentosOS_bonds
 organizations:
+- Default Organization
+- OrgB
+- OrgC
 - OrgF
-- OrgH
+- OrgG
+- this is very very very very very very very very very very very very very very very
+  very very very long name
 locations:
 - LocA
+- US/AWS
 %>
-hold your hands into the sky
+<%#
+This template accepts the following parameters:
+- lang: string (default="en_US.UTF-8")
+- selinux-mode: string (default="enforcing")
+- keyboard: string (default="us")
+- time-zone: string (default="UTC")
+- http-proxy: string (default="")
+- http-proxy-port: string (default="")
+- force-puppet: boolean (default=false)
+- enable-epel: boolean (default=true)
+- enable-puppetlabs-repo: boolean (default=false)
+- enable-puppetlabs-pc1-repo: boolean (default=false)
+- enable-puppetlabs-puppet5-repo: boolean (default=false)
+- salt_master: string (default=undef)
+- ntp-server: string (default="0.fedora.pool.ntp.org")
+- bootloader-append: string (default="nofb quiet splash=quiet")
+- disable-firewall: boolean (default=false)
+- package_upgrade: boolean (default=true)
+- disable-uek: boolean (default=false)
+%>
 <%
   rhel_compatible = @host.operatingsystem.family == 'Redhat' && @host.operatingsystem.name != 'Fedora'
+  is_fedora = @host.operatingsystem.name == 'Fedora'
   os_major = @host.operatingsystem.major.to_i
+  os_minor = @host.operatingsystem.minor.to_i
   realm_compatible = (@host.operatingsystem.name == 'Fedora' && os_major >= 20) || (rhel_compatible && os_major >= 7)
   # safemode renderer does not support unary negation
   pm_set = @host.puppetmaster.empty? ? false : true
@@ -25,8 +55,26 @@ hold your hands into the sky
   chef_enabled = @host.respond_to?(:chef_proxy) && @host.chef_proxy
   section_end = (rhel_compatible && os_major <= 5) ? '' : '%end'
 %>
+<% if (is_fedora && os_major < 29) || (rhel_compatible && os_major < 8) -%>
 install
+<% end -%>
+<%
+if host_param('kickstart_liveimg')
+  img_name = host_param('kickstart_liveimg')
+  liveimg_url = if host_param('kt_activation_keys')
+    repository_url(img_name, 'isos')
+  else
+    if img_name.match(%r|^([\w\-\+]+)://|)
+      img_name
+    else
+      "#{@host.operatingsystem.medium_uri(@host)}/#{img_name}"
+    end
+  end
+%>
+liveimg --url=<%= liveimg_url %> <%= proxy_string %>
+<% else %>
 <%= @mediapath %><%= proxy_string %>
+<% end %>
 lang <%= host_param('lang') || 'en_US.UTF-8' %>
 selinux --<%= host_param('selinux-mode') || host_param('selinux') || 'enforcing' %>
 keyboard <%= host_param('keyboard') || 'us' %>
@@ -38,7 +86,8 @@ skipx
 <% else -%>
 <% dhcp = !@static -%>
 <% end -%>
-network --bootproto <%= dhcp ? 'dhcp' : "static --ip=#{@host.ip} --netmask=#{subnet.mask} --gateway=#{subnet.gateway} --nameserver=#{[subnet.dns_primary, subnet.dns_secondary].select{ |item| item.present? }.join(',')}" %> --hostname <%= @host %><%= os_major >= 6 ? " --device=#{@host.mac}" : '' -%>
+
+network --bootproto <%= dhcp ? 'dhcp' : "static --ip=#{@host.ip} --netmask=#{subnet.mask} --gateway=#{subnet.gateway} --nameserver=#{[subnet.dns_primary, subnet.dns_secondary].select{ |item| item.present? }.join(',')} --mtu=#{subnet.mtu.to_s}" %> --hostname <%= @host %><%= os_major >= 6 ? " --device=#{@host.mac}" : '' -%>
 
 rootpw --iscrypted <%= root_pass %>
 <% if host_param_true?('disable-firewall') -%>
@@ -46,7 +95,11 @@ firewall --disable
 <% else -%>
 firewall --<%= os_major >= 6 ? 'service=' : '' %>ssh
 <% end -%>
-authconfig --useshadow --passalgo=<%= @host.operatingsystem.password_hash || 'sha256' %> --kickstart
+<% if (is_fedora && os_major >= 28) || (rhel_compatible && os_major >= 8) -%>
+authselect --useshadow --passalgo=<%= @host.operatingsystem.password_hash.downcase || 'sha256' %> --kickstart
+<% else -%>
+authconfig --useshadow --passalgo=<%= @host.operatingsystem.password_hash.downcase || 'sha256' %> --kickstart
+<% end -%>
 timezone --utc <%= host_param('time-zone') || 'UTC' %>
 <% if rhel_compatible -%>
 services --disabled gpm,sendmail,cups,pcmcia,isdn,rawdevices,hpoj,bluetooth,openibd,avahi-daemon,avahi-dnsconfd,hidd,hplip,pcscd
@@ -61,16 +114,16 @@ realm join --one-time-password='<%= @host.otp || "$HOST[OTP]" %>' <%= @host.real
 repo --name=fedora-everything --mirrorlist=https://mirrors.fedoraproject.org/metalink?repo=fedora-<%= @host.operatingsystem.major %>&arch=<%= @host.architecture %><%= proxy_string %>
 <% end -%>
 
-<% if @host.operatingsystem.name == 'OracleLinux' && os_major == 7 -%>
+<% if @host.operatingsystem.name == 'OracleLinux' && os_major == 7 && os_minor < 5 -%>
 repo --name="Server-Mysql"
 <% end -%>
 
-<% if @host.operatingsystem.name == 'Fedora' and os_major <= 16 -%>
+<% if @host.operatingsystem.name == 'Fedora' && os_major <= 16 -%>
 # Bootloader exception for Fedora 16:
-bootloader --append="<%= host_param('bootloader-append') || 'nofb quiet splash=quiet' %> <%=ks_console%>" <%= grub_pass %>
+bootloader --append="<%= host_param('bootloader-append') || 'nofb quiet splash=quiet' %> <%= ks_console %>" <%= @grub_pass %>
 part biosboot --fstype=biosboot --size=1
 <% else -%>
-bootloader --location=mbr --append="<%= host_param('bootloader-append') || 'nofb quiet splash=quiet' %>" <%= grub_pass %>
+bootloader --location=mbr --append="<%= host_param('bootloader-append') || 'nofb quiet splash=quiet' %>" <%= @grub_pass %>
 <% if os_major == 5 -%>
 key --skip
 <% end -%>
@@ -144,7 +197,9 @@ echo 'proxy = <%= proxy_uri %>' >> /etc/yum.conf
 <%= snippet 'epel' -%>
 <% end -%>
 
-<% if @host.info['parameters']['realm'] && @host.realm && @host.realm.realm_type == 'FreeIPA' -%>
+<%= snippet 'redhat_register' %>
+
+<% if host_enc['parameters']['realm'] && @host.realm && (@host.realm.realm_type == 'FreeIPA' || @host.realm.realm_type == 'Red Hat Identity Management') -%>
 <%= snippet 'freeipa_register' %>
 <% end -%>
 
@@ -158,6 +213,8 @@ fi
 <% end -%>
 
 <%= snippet('remote_execution_ssh_keys') %>
+
+<%= snippet "blacklist_kernel_modules" %>
 
 <% if chef_enabled %>
 <%= snippet 'chef_client' %>
@@ -180,14 +237,7 @@ yum -t -y remove kernel-uek*
 sed -e 's/DEFAULTKERNEL=kernel-uek/DEFAULTKERNEL=kernel/g' -i /etc/sysconfig/kernel
 <% end -%>
 
-<% if realm_compatible && host_param_true?('ansible_tower_provisioning') %>
-# This is RHEL7 specific code, as it uses systemctl, replace with
-# chkconfig or an @boot cron if you run RHEL5 or RHEL6
-<%= save_to_file('/etc/systemd/system/ansible-callback.service',
-                 snippet('ansible_tower_callback_service')) %>
-# Runs during first boot, removes itself
-/usr/bin/systemctl enable ansible-callback
-<% end -%>
+<%= snippet('ansible_provisioning_callback') %>
 
 sync
 
@@ -198,3 +248,4 @@ wget -q -O /dev/null --no-check-certificate <%= foreman_url('built') %>
 exit 0
 
 <%= section_end -%>
+

@@ -1,15 +1,12 @@
 <%#
-name: Kickstart fake
+name: FreeBSD default fake
 snippet: false
 model: Ptable
 organizations:
-- Default Organization
 - OrgA
 - OrgF
 locations:
 - LocA
 - LocF
 %>
-zerombr
-clearpart --all --initlabel
-autopart
+# Not supported with zfsinstall

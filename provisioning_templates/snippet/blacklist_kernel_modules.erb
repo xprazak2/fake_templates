@@ -1,0 +1,31 @@
+<%#
+name: blacklist_kernel_modules
+snippet: true
+model: ProvisioningTemplate
+organizations:
+- Default Organization
+- OrgA
+- OrgB
+- OrgC
+- OrgD
+- OrgE
+- OrgF
+- OrgG
+- this is very very very very very very very very very very very very very very very
+  very very very long name
+locations:
+- Default Location
+- LocA
+- LocB
+- LocD
+- LocE
+- UK
+- UK/AWS
+- US
+- US/AWS
+%>
+<% if host_param('blacklist_kernel_modules') -%>
+  <% host_param('blacklist_kernel_modules').split.each do |mod| -%>
+    echo "blacklist <%= mod %>" >> /etc/modprobe.d/blacklist.conf
+  <% end -%>
+<% end -%>

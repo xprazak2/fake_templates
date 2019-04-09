@@ -1,0 +1,18 @@
+<%#
+name: chef_client
+snippet: true
+model: ProvisioningTemplate
+organizations:
+- Default Organization
+- OrgB
+- OrgC
+- OrgF
+- OrgG
+- this is very very very very very very very very very very very very very very very
+  very very very long name
+locations:
+- LocA
+- US/AWS
+%>
+echo "Bootstraping chef"
+<%= snippet_if_exists(host_param('chef_bootstrap_template') || 'chef-client omnibus bootstrap') %>

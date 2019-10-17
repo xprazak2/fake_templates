@@ -1,12 +1,9 @@
 <%#
-name: Kickstart fake
+name: Kickstart default totally fake
 snippet: false
 model: Ptable
 os_family: Redhat
-organizations:
-- OrgD
-- OrgE
 %>
 zerombr
 clearpart --all --initlabel
-autopart
+autopart <%= host_param('autopart_options') %>

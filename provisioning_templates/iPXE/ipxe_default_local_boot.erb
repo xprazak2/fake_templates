@@ -1,0 +1,29 @@
+<%#
+name: iPXE default local boot
+snippet: false
+model: ProvisioningTemplate
+kind: iPXE
+organizations:
+- Default Organization
+- OrdinaryOrg
+- OrgA
+- OrgB
+- OrgC
+- OrgD
+- OrgE
+- OrgP
+- tax
+- very very very very very very very very very very very very very very very very
+  very very very very long name
+locations:
+- BRQ
+- Default Location
+- LocA
+- LocA/LocAA
+- LocA/LocAA/LocAAA
+- LocB
+%>
+#!ipxe
+
+# Skips booting from network and continues booting from next device
+exit

@@ -1,0 +1,30 @@
+<%#
+name: Kickstart default thin
+snippet: false
+model: Ptable
+os_family: Redhat
+organizations:
+- Default Organization
+- OrdinaryOrg
+- OrgA
+- OrgB
+- OrgC
+- OrgD
+- OrgE
+- OrgP
+- tax
+- very very very very very very very very very very very very very very very very
+  very very very very long name
+locations:
+- BRQ
+- Default Location
+- LocA
+- LocA/LocAA
+- LocA/LocAA/LocAAA
+- LocB
+- LocP
+- LocQ
+%>
+zerombr
+clearpart --all --initlabel
+autopart --type=thinp <%= host_param('autopart_options') %>

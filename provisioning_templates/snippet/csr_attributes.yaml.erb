@@ -1,0 +1,27 @@
+<%#
+name: csr_attributes.yaml
+snippet: true
+model: ProvisioningTemplate
+organizations:
+- Default Organization
+- OrdinaryOrg
+- OrgA
+- OrgB
+- OrgC
+- OrgD
+- OrgE
+- OrgP
+- tax
+- very very very very very very very very very very very very very very very very
+  very very very very long name
+locations:
+- BRQ
+- Default Location
+- LocA
+- LocA/LocAA
+- LocA/LocAA/LocAAA
+- LocB
+%>
+---
+custom_attributes:
+  1.2.840.113549.1.9.7: "<%= @host.puppetca_token.value %>"

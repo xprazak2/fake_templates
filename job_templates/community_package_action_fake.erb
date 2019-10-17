@@ -1,42 +1,40 @@
 <%#
-name: Package Action Fake
+name: Community Package Action Fake
 snippet: false
-template_inputs:
-- name: pre_script
-  required: false
-  input_type: user
-  description: A script to run prior to the package action
-  advanced: true
-  value_type: plain
-- name: action
-  required: true
-  input_type: user
-  description: 'The package action: install, update, or remove'
-  options: |-
-    install
-    update
-    remove
-    group install
-    group remove
-  advanced: false
-  value_type: plain
-- name: package
-  required: false
-  input_type: user
-  description: The name of the package, if any
-  advanced: false
-  value_type: plain
-- name: post_script
-  required: false
-  input_type: user
-  description: A script to run after the package action
-  advanced: true
-  value_type: plain
 model: JobTemplate
 job_category: Packages
 description_format: "%{action} package(s) %{package}"
 provider_type: SSH
 kind: job_template
+%>
+
+<%#
+kind: job_template
+name: Package Action Fake
+model: JobTemplate
+job_category: Packages
+description_format: "%{action} package(s) %{package}"
+provider_type: SSH
+template_inputs:
+- name: pre_script
+  description: A script to run prior to the package action
+  input_type: user
+  required: false
+  advanced: true
+- name: action
+  description: 'The package action: install, update, or remove'
+  input_type: user
+  required: true
+  options: "install\nupdate\nremove\ngroup install\ngroup remove"
+- name: package
+  description: The name of the package, if any
+  input_type: user
+  required: false
+- name: post_script
+  description: A script to run after the package action
+  input_type: user
+  required: false
+  advanced: true
 %>
 
 <%

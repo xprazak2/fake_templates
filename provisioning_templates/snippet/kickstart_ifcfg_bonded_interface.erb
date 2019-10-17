@@ -1,0 +1,31 @@
+<%#
+name: kickstart_ifcfg_bonded_interface
+snippet: true
+model: ProvisioningTemplate
+organizations:
+- Default Organization
+- OrdinaryOrg
+- OrgA
+- OrgB
+- OrgC
+- OrgD
+- OrgE
+- OrgP
+- tax
+- very very very very very very very very very very very very very very very very
+  very very very very long name
+locations:
+- BRQ
+- Default Location
+- LocA
+- LocA/LocAA
+- LocA/LocAA/LocAAA
+%>
+<%= snippet('kickstart_ifcfg_generic_interface', :variables => {
+                  :interface => @interface,
+                  :subnet => @subnet,
+                  :subnet6 => @subnet6,
+                  :dhcp => @dhcp }) -%>
+NM_CONTROLLED=no
+MASTER=<%= @bond_identifier %>
+SLAVE=yes

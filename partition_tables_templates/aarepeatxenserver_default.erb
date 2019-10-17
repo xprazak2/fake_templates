@@ -1,0 +1,10 @@
+<%#
+name: AArepeatXenServer default
+snippet: false
+model: Ptable
+%>
+<%
+  gueststorage = host_param('gueststorage') || 'yes'
+  primary_disk = host_param('install-disk') || 'sda'
+-%>
+  <primary-disk gueststorage="<%= gueststorage %>"><%= primary_disk %></primary-disk>

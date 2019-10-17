@@ -1,0 +1,26 @@
+<%#
+name: FreeBSD (mfsBSD) PXELinux
+snippet: false
+model: ProvisioningTemplate
+kind: PXELinux
+organizations:
+- Default Organization
+- OrdinaryOrg
+- OrgA
+- OrgB
+- OrgC
+- OrgD
+- OrgE
+- OrgP
+- tax
+- very very very very very very very very very very very very very very very very
+  very very very very long name
+locations:
+- Default Location
+%>
+# foreman_url=<%= foreman_url('provision') %>
+DEFAULT freebsd
+
+LABEL freebsd
+    KERNEL memdisk
+    APPEND initrd=<%= @initrd %> harddisk raw

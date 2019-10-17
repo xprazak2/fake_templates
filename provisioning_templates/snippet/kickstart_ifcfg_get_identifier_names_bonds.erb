@@ -1,0 +1,26 @@
+<%#
+name: kickstart_ifcfg_get_identifier_names_bonds
+snippet: true
+model: ProvisioningTemplate
+organizations:
+- Default Organization
+- OrgD
+- OrgE
+- OrgP
+- tax
+- very very very very very very very very very very very very very very very very
+  very very very very long name
+%>
+<%= puts @identifier %>
+
+<%- if @identifier -%>
+<%=   "real=\"#{@identifier}\"" %>
+<%- else -%>
+<%=   "real=`ip -o link | awk '/#{@interface.inheriting_mac}/ {print $2;}' | sed s/:$//`" -%>
+<%-   if @interface.virtual? && !@interface.attached_to.present? -%>
+<%=     "\nreal=`echo #{@interface.identifier} | sed s/#{@interface.attached_to}/$real/`" -%>
+<%-   end -%>
+<%- end -%>
+<%# ifcfg files are ignored by NM if their name contains colons so we convert colons to underscore %>
+sanitized_real=`echo $real | sed s/:/_/`
+

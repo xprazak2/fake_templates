@@ -1,0 +1,28 @@
+<%#
+name: AutoYaST default PXELinux
+snippet: false
+model: ProvisioningTemplate
+kind: PXELinux
+organizations:
+- Default Organization
+- OrdinaryOrg
+- OrgA
+- OrgB
+- OrgC
+- OrgD
+- OrgE
+- OrgP
+- tax
+- very very very very very very very very very very very very very very very very
+  very very very very long name
+locations:
+- Default Location
+%>
+<% http_proxy_string = host_param('http-proxy') ? "proxy=http://" + host_param('http-proxy') + ":" + host_param('http-proxy-port') : '' -%>
+
+DEFAULT linux
+
+LABEL linux
+    KERNEL <%= @kernel %>
+    APPEND initrd=<%= @initrd %> ramdisk_size=65536 install=<%= @mediapath %> autoyast=<%= foreman_url('provision') %> textmode=1 <%= http_proxy_string -%>
+

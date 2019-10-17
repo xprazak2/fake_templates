@@ -1,0 +1,31 @@
+<%#
+name: AutoYaST entire SCSI disk
+snippet: false
+model: Ptable
+os_family: Suse
+organizations:
+- Default Organization
+- OrdinaryOrg
+- OrgA
+- OrgB
+- OrgC
+- OrgD
+- OrgE
+- OrgP
+- tax
+- very very very very very very very very very very very very very very very very
+  very very very very long name
+locations:
+- BRQ
+- Default Location
+- LocA
+- LocB
+- LocP
+- LocQ
+%>
+  <partitioning  config:type="list">
+    <drive>
+      <device>/dev/sda</device>
+      <use>all</use>
+    </drive>
+  </partitioning>

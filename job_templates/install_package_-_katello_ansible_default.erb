@@ -1,0 +1,39 @@
+<%#
+name: Install Package - Katello Ansible Default
+snippet: false
+template_inputs:
+- name: package
+  required: true
+  input_type: user
+  advanced: false
+  value_type: plain
+model: JobTemplate
+job_category: Katello via Ansible
+description_format: Install package(s) %{package}
+provider_type: Ansible
+kind: job_template
+organizations:
+- Default Organization
+- OrdinaryOrg
+- OrgA
+- OrgB
+- OrgC
+- OrgD
+- OrgE
+- OrgP
+- OrgQ
+- tax
+- very very very very very very very very very very very very very very very very
+  very very very very long name
+locations:
+- BRQ
+- Default Location
+- LocA
+- LocA/LocAA
+- LocA/LocAA/LocAAA
+- LocB
+- LocP
+- LocQ
+%>
+
+<%= render_template('Package Action - Ansible Default', :state => 'latest', :name => input('package')) %>

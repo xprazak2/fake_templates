@@ -1,0 +1,43 @@
+<%#
+name: Run OpenSCAP scans
+snippet: false
+template_inputs:
+- name: policies
+  required: false
+  input_type: puppet_parameter
+  puppet_class_name: foreman_scap_client
+  puppet_parameter_name: policies
+  advanced: false
+  value_type: plain
+model: JobTemplate
+job_category: OpenSCAP
+description_format: Run scan for all OpenSCAP policies on host
+provider_type: SSH
+kind: job_template
+organizations:
+- Default Organization
+- OrdinaryOrg
+- OrgA
+- OrgB
+- OrgC
+- OrgD
+- OrgE
+- OrgP
+- OrgQ
+- tax
+- very very very very very very very very very very very very very very very very
+  very very very very long name
+locations:
+- BRQ
+- Default Location
+- LocA
+- LocA/LocAA
+- LocA/LocAA/LocAAA
+- LocB
+- LocP
+- LocQ
+%>
+
+<% input('policies').map { |policy_config| policy_config['id'] }.each do |id| -%>
+/usr/bin/foreman_scap_client <%= id %>
+<% end -%>

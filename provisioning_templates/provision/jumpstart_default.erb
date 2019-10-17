@@ -1,0 +1,30 @@
+<%#
+name: Jumpstart default
+snippet: false
+model: ProvisioningTemplate
+kind: provision
+organizations:
+- Default Organization
+- OrdinaryOrg
+- OrgA
+- OrgB
+- OrgC
+- OrgD
+- OrgE
+- OrgP
+- tax
+- very very very very very very very very very very very very very very very very
+  very very very very long name
+locations:
+- Default Location
+%>
+install_type <%= @install_type %>
+partitioning explicit
+<%= @disk %>
+<% if @host.use_image  -%>
+archive_location nfs <%=@archive_location%>
+<% else -%>
+system_type <%= @system_type %>
+package <%= @packages %> add
+cluster <%= @cluster %>
+<% end -%>

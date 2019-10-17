@@ -1,12 +1,20 @@
 <%#
-name: A fake provision
+name: Kickstart RHEL default
 snippet: false
 model: ProvisioningTemplate
 kind: provision
-oses:
-- CentOS
 organizations:
 - Default Organization
+- OrdinaryOrg
+- OrgA
+- OrgB
+- OrgC
+- OrgD
+- OrgE
+- OrgP
+- tax
+- very very very very very very very very very very very very very very very very
+  very very very very long name
 locations:
 - Default Location
 %>
@@ -27,12 +35,10 @@ This template accepts the following parameters:
 - bootloader-append: string (default="nofb quiet splash=quiet")
 - disable-firewall: boolean (default=false)
 - package_upgrade: boolean (default=true)
-- disable-uek: boolean (default=false)
 %>
 <%
-  rhel_compatible = @host.operatingsystem.family == 'Redhat' && @host.operatingsystem.name != 'Fedora'
   os_major = @host.operatingsystem.major.to_i
-  realm_compatible = (@host.operatingsystem.name == 'Fedora' && os_major >= 20) || (rhel_compatible && os_major >= 7)
+  realm_compatible = os_major >= 7 ? true : false
   # safemode renderer does not support unary negation
   pm_set = @host.puppetmaster.empty? ? false : true
   proxy_uri = host_param('http-proxy') ? "http://#{host_param('http-proxy')}:#{host_param('http-proxy-port')}" : nil
@@ -40,7 +46,7 @@ This template accepts the following parameters:
   puppet_enabled = pm_set || host_param_true?('force-puppet')
   salt_enabled = host_param('salt_master') ? true : false
   chef_enabled = @host.respond_to?(:chef_proxy) && @host.chef_proxy
-  section_end = (rhel_compatible && os_major <= 5) ? '' : '%end'
+  section_end = os_major <= 5 ? '' : '%end'
 %>
 install
 <%= @mediapath %><%= proxy_string %>
@@ -65,32 +71,16 @@ firewall --<%= os_major >= 6 ? 'service=' : '' %>ssh
 <% end -%>
 authconfig --useshadow --passalgo=<%= @host.operatingsystem.password_hash || 'sha256' %> --kickstart
 timezone --utc <%= host_param('time-zone') || 'UTC' %>
-<% if rhel_compatible -%>
 services --disabled gpm,sendmail,cups,pcmcia,isdn,rawdevices,hpoj,bluetooth,openibd,avahi-daemon,avahi-dnsconfd,hidd,hplip,pcscd
-<% end -%>
 
 <% if realm_compatible && host_enc['parameters']['realm'] && @host.realm && @host.realm.realm_type == 'Active Directory' -%>
 # One-time password will be requested at install time. Otherwise, $HOST[OTP] is used as a placeholder value.
 realm join --one-time-password='<%= @host.otp || "$HOST[OTP]" %>' <%= @host.realm %>
 <% end -%>
 
-<% if @host.operatingsystem.name == 'Fedora' -%>
-repo --name=fedora-everything --mirrorlist=https://mirrors.fedoraproject.org/metalink?repo=fedora-<%= @host.operatingsystem.major %>&arch=<%= @host.architecture %><%= proxy_string %>
-<% end -%>
-
-<% if @host.operatingsystem.name == 'OracleLinux' && os_major == 7 -%>
-repo --name="Server-Mysql"
-<% end -%>
-
-<% if @host.operatingsystem.name == 'Fedora' and os_major <= 16 -%>
-# Bootloader exception for Fedora 16:
-bootloader --append="<%= host_param('bootloader-append') || 'nofb quiet splash=quiet' %> <%=ks_console%>" <%= grub_pass %>
-part biosboot --fstype=biosboot --size=1
-<% else -%>
 bootloader --location=mbr --append="<%= host_param('bootloader-append') || 'nofb quiet splash=quiet' %>" <%= grub_pass %>
 <% if os_major == 5 -%>
 key --skip
-<% end -%>
 <% end -%>
 
 <% if @dynamic -%>
@@ -100,11 +90,7 @@ key --skip
 <% end -%>
 
 text
-<% if @host.respond_to?(:bootdisk_build?) && @host.bootdisk_build? %>
-reboot --eject
-<% else -%>
 reboot
-<% end -%>
 
 %packages
 yum
@@ -157,11 +143,13 @@ echo "updating system time"
 echo 'proxy = <%= proxy_uri %>' >> /etc/yum.conf
 <% end -%>
 
-<% if rhel_compatible && !host_param_false?('enable-epel') -%>
+<% unless host_param_false?('enable-epel') -%>
 <%= snippet 'epel' -%>
 <% end -%>
 
-<% if @host.info['parameters']['realm'] && @host.realm && @host.realm.realm_type == 'FreeIPA' -%>
+<%= snippet 'redhat_register' %>
+
+<% if host_enc['parameters']['realm'] && @host.realm && @host.realm.realm_type == 'FreeIPA' -%>
 <%= snippet 'freeipa_register' %>
 <% end -%>
 
@@ -191,20 +179,8 @@ fi
 <%= snippet 'saltstack_setup' %>
 <% end -%>
 
-<% if @host.operatingsystem.name == 'OracleLinux' && host_param_true?('disable-uek') -%>
-# Uninstall the Oracle Unbreakable Kernel packages
-yum -t -y remove kernel-uek*
-sed -e 's/DEFAULTKERNEL=kernel-uek/DEFAULTKERNEL=kernel/g' -i /etc/sysconfig/kernel
-<% end -%>
+<%= snippet('ansible_provisioning_callback') %>
 
-<% if realm_compatible && host_param_true?('ansible_tower_provisioning') %>
-# This is RHEL7 specific code, as it uses systemctl, replace with
-# chkconfig or an @boot cron if you run RHEL5 or RHEL6
-<%= save_to_file('/etc/systemd/system/ansible-callback.service',
-                 snippet('ansible_tower_callback_service')) %>
-# Runs during first boot, removes itself
-/usr/bin/systemctl enable ansible-callback
-<% end -%>
 
 sync
 

@@ -1,0 +1,26 @@
+<%#
+name: Kickstart oVirt-RHVH PXELinux
+snippet: false
+model: ProvisioningTemplate
+kind: PXELinux
+organizations:
+- Fritz1Org
+- Fritz2Org
+- Fritz3Org
+- NewOrg
+- OrgF
+- Unassigned Organization
+- WithOrgAdmin
+locations:
+- Fritz1Loc
+- Fritz2Loc
+- LocA
+- WithHans
+- WithHansAgain
+%>
+DEFAULT rhvh
+
+LABEL rhvh
+KERNEL <%= @kernel %>
+APPEND initrd=<%= @initrd %> inst.ks=<%= foreman_url("provision") %> inst.stage2=<%= medium_uri %> local_boot_trigger=<%= foreman_url("built") %> intel_iommu=on
+IPAPPEND 2

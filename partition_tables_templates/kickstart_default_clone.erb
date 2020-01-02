@@ -1,0 +1,13 @@
+<%#
+name: Kickstart default clone
+snippet: false
+model: Ptable
+os_family: Redhat
+organizations:
+- Default Organization
+locations:
+- Default Location
+%>
+zerombr
+clearpart --all --initlabel
+autopart <%= host_param('autopart_options') %>

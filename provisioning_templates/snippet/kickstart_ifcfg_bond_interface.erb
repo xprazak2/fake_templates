@@ -1,0 +1,37 @@
+<%#
+name: kickstart_ifcfg_bond_interface
+snippet: true
+model: ProvisioningTemplate
+organizations:
+- Default Organization
+- Fritz1Org
+- Fritz2Org
+- Fritz3Org
+- NewOrg
+- OrgB
+- OrgC
+- OrgF
+- OrgG
+- this is very very very very very very very very very very very very very very very
+  very very very long name
+- Unassigned Organization
+- WithOrgAdmin
+locations:
+- Fritz1Loc
+- Fritz2Loc
+- LocA
+- NA/US/AWS
+- WithHans
+- WithHansAgain
+%>
+<%= snippet('kickstart_ifcfg_generic_interface', :variables => {
+                  :interface => @interface,
+                  :subnet => @subnet,
+                  :subnet6 => @subnet6,
+                  :dhcp => @dhcp }) -%>
+TYPE=Bond
+BONDING_OPTS="<%= @interface.bond_options -%> mode=<%= @interface.mode -%>"
+BONDING_MASTER=yes
+<%-   if ( @host.operatingsystem.family == 'Redhat' && @host.operatingsystem.major.to_i <= 7 ) -%>
+<%=     "NM_CONTROLLED=no" %>
+<%-   end -%>

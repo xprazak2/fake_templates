@@ -1,0 +1,15 @@
+<%#
+name: Community AutoYaST entire virtual disk
+snippet: false
+model: Ptable
+organizations:
+- Default Organization
+locations:
+- Default Location
+-%>
+  <partitioning  config:type="list">
+    <drive>
+      <device>/dev/vda</device>
+      <use>all</use>
+    </drive>
+  </partitioning>

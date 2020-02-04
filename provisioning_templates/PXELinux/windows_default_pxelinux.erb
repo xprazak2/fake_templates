@@ -1,0 +1,45 @@
+<%#
+name: Windows default PXELinux
+snippet: false
+model: ProvisioningTemplate
+kind: PXELinux
+organizations:
+- Default Organization
+- Fritz1Org
+- Fritz2Org
+- Fritz3Org
+- NewOrg
+- OrgA
+- OrgB
+- OrgC
+- OrgD
+- OrgE
+- OrgF
+- OrgG
+- OrgHH
+- this is very very very very very very very very very very very very very very very
+  very very very long name
+- Unassigned Organization
+- WithOrgAdmin
+locations:
+- Default Location
+- Default Location/Default Child Location
+- Fritz1Loc
+- Fritz2Loc
+- LocA
+- LocB
+- LocD
+- LocE
+- LocF
+- NA
+- NA/US
+- NA/US/AWS
+- UK
+- UK/AWS
+- WithHans
+- WithHansAgain
+-%>
+DEFAULT menu
+LABEL menu
+     COM32 linux.c32 <%= @host.operatingsystem.bootfile(medium_provider,:kernel) %>
+     APPEND initrdfile=<%= foreman_url('script') %>@peSetup.cmd,<%= @host.operatingsystem.bootfile(medium_provider,:bcd) %>,<%= @host.operatingsystem.bootfile(medium_provider,:bootsdi) %>,<%= @host.operatingsystem.bootfile(medium_provider,:bootwim) %>

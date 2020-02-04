@@ -1,0 +1,13 @@
+<%#
+name: Community PXELinux default memdisk
+snippet: false
+model: ProvisioningTemplate
+kind: PXELinux
+organizations:
+- Default Organization
+-%>
+DEFAULT memdisk
+
+LABEL memdisk
+    KERNEL memdisk
+    APPEND initrd=<%= @initrd %> harddisk raw

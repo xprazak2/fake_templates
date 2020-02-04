@@ -1,0 +1,12 @@
+<%#
+name: Community WAIK default PXELinux
+snippet: false
+model: ProvisioningTemplate
+kind: PXELinux
+organizations:
+- Default Organization
+-%>
+DEFAULT winPE
+
+LABEL winPE
+    KERNEL /Boot/startrom.0

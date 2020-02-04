@@ -1,0 +1,55 @@
+<%#
+name: iPXE intermediate script
+snippet: false
+model: ProvisioningTemplate
+kind: iPXE
+organizations:
+- Default Organization
+- Fritz1Org
+- Fritz2Org
+- Fritz3Org
+- NewOrg
+- OrgA
+- OrgB
+- OrgC
+- OrgD
+- OrgE
+- OrgF
+- OrgG
+- this is very very very very very very very very very very very very very very very
+  very very very long name
+- Unassigned Organization
+- WithOrgAdmin
+locations:
+- Default Location
+- Fritz1Loc
+- Fritz2Loc
+- LocA
+- LocB
+- LocD
+- LocE
+- NA/US/AWS
+- UK
+- UK/AWS
+- WithHans
+- WithHansAgain
+-%>
+#!ipxe
+# Intermediate iPXE script to report MAC address to Foreman
+<% (0..32).each do |i| -%>
+
+:net<%= i %>
+isset ${net<%= i -%>/mac} || goto no_nic
+dhcp net<%= i -%> || goto net<%= i+1 %>
+chain <%= foreman_url('iPXE') %>?mac=${net<%= i -%>/mac} || goto net<%= i+1 %>
+<% end -%>
+
+:net33
+goto no_nic
+
+exit 0
+
+:no_nic
+echo Failed to chainload from any network interface
+sleep 30
+exit 1

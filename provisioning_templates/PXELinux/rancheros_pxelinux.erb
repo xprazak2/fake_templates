@@ -1,0 +1,43 @@
+<%#
+name: RancherOS PXELinux
+snippet: false
+model: ProvisioningTemplate
+kind: PXELinux
+oses:
+- test
+organizations:
+- Default Organization
+- Fritz1Org
+- Fritz2Org
+- Fritz3Org
+- NewOrg
+- OrgA
+- OrgB
+- OrgC
+- OrgD
+- OrgE
+- OrgF
+- OrgG
+- this is very very very very very very very very very very very very very very very
+  very very very long name
+- Unassigned Organization
+- WithOrgAdmin
+locations:
+- Fritz1Loc
+- Fritz2Loc
+- LocA
+- LocB
+- LocD
+- LocE
+- NA/US/AWS
+- UK
+- UK/AWS
+- WithHans
+- WithHansAgain
+-%>
+DEFAULT rancheros
+
+LABEL rancheros
+    KERNEL <%= @kernel %>
+    APPEND rancher.state.dev=LABEL=RANCHER_STATE rancher.state.autoformat=[<%= host_param('install-disk') || '/dev/sda' %>] rancher.cloud_init.datasources=['url:<%= foreman_url('provision')-%>']
+    INITRD <%= @initrd -%>

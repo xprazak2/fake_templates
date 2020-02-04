@@ -1,0 +1,34 @@
+<%#
+name: XenServer default PXELinux
+snippet: false
+model: ProvisioningTemplate
+kind: PXELinux
+oses:
+- test
+organizations:
+- Default Organization
+- Fritz1Org
+- Fritz2Org
+- Fritz3Org
+- NewOrg
+- OrgB
+- OrgC
+- OrgF
+- OrgG
+- this is very very very very very very very very very very very very very very very
+  very very very long name
+- Unassigned Organization
+- WithOrgAdmin
+locations:
+- Fritz1Loc
+- Fritz2Loc
+- LocA
+- NA/US/AWS
+- WithHans
+- WithHansAgain
+-%>
+default xenserver
+label xenserver
+kernel mboot.c32
+append <%= @xen %> dom0_max_vcpus=1-2 dom0_mem=752M,max:752M com1=115200,8n1 console=com1,vga --- <%= @kernel -%> xencons=hvc console=hvc0 console=tty0 answerfile=<%= foreman_url('provision')%> install --- <%= @initrd %>
+IPAPPEND 2

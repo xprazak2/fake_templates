@@ -1,0 +1,40 @@
+<%#
+name: iPXE default local boot
+snippet: false
+model: ProvisioningTemplate
+kind: iPXE
+organizations:
+- Default Organization
+- Fritz1Org
+- Fritz2Org
+- Fritz3Org
+- NewOrg
+- OrgA
+- OrgB
+- OrgC
+- OrgD
+- OrgE
+- OrgF
+- OrgG
+- this is very very very very very very very very very very very very very very very
+  very very very long name
+- Unassigned Organization
+- WithOrgAdmin
+locations:
+- Default Location
+- Fritz1Loc
+- Fritz2Loc
+- LocA
+- LocB
+- LocD
+- LocE
+- NA/US/AWS
+- UK
+- UK/AWS
+- WithHans
+- WithHansAgain
+-%>
+#!ipxe
+
+# Skips booting from network and continues booting from next device
+exit

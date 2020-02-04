@@ -1,0 +1,54 @@
+<%#
+name: Restart Services - Katello Ansible Default
+snippet: false
+template_inputs:
+- name: helper
+  required: true
+  input_type: user
+  description: A comma separated list of commands to run to restart services
+  advanced: false
+  value_type: plain
+model: JobTemplate
+job_category: Katello via Ansible
+description_format: Restart Services
+provider_type: Ansible
+kind: job_template
+organizations:
+- Fritz1Org
+- Fritz2Org
+- Fritz3Org
+- NewOrg
+- this is very very very very very very very very very very very very very very very
+  very very very long name
+- Unassigned Organization
+- WithOrgAdmin
+locations:
+- Default Location
+- Default Location/Default Child Location
+- Fritz1Loc
+- Fritz2Loc
+- LocA
+- LocB
+- LocD
+- LocE
+- LocF
+- NA
+- NA/US
+- NA/US/AWS
+- UK
+- UK/AWS
+- WithHans
+- WithHansAgain
+%>
+
+<%
+commands = input(:helper).split(',').map { |split| split.strip }
+reboot = commands.delete('reboot')
+-%>
+<%= render_template(
+    'Run Command - Ansible Default',
+    :command => (commands.push('katello-tracer-upload')).join("\n")
+) %>
+<% if reboot %>
+    - reboot:
+<% end %>

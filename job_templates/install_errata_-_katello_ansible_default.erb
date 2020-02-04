@@ -1,0 +1,45 @@
+<%#
+name: Install Errata - Katello Ansible Default
+snippet: false
+template_inputs:
+- name: errata
+  required: true
+  input_type: user
+  description: A comma separated list of errata to install
+  advanced: false
+  value_type: plain
+model: JobTemplate
+job_category: Katello via Ansible
+description_format: Install errata %{errata}
+provider_type: Ansible
+kind: job_template
+organizations:
+- Fritz1Org
+- Fritz2Org
+- Fritz3Org
+- NewOrg
+- this is very very very very very very very very very very very very very very very
+  very very very long name
+- Unassigned Organization
+- WithOrgAdmin
+locations:
+- Default Location
+- Default Location/Default Child Location
+- Fritz1Loc
+- Fritz2Loc
+- LocA
+- LocB
+- LocD
+- LocE
+- LocF
+- NA
+- NA/US
+- NA/US/AWS
+- UK
+- UK/AWS
+- WithHans
+- WithHansAgain
+%>
+
+<% advisories = input(:errata).split(',').map { |e| "--advisory=#{e}" }.join(' ') %>
+<%= render_template('Run Command - Ansible Default', :command => "yum update-minimal #{advisories}") %>

@@ -44,11 +44,12 @@ template_inputs:
 
 # Helper function that exits with a particular message and code.
 #
-# Usage:
+# Usage Example:
 #   exit_with_message "Could not do a thing" 2
 #
+
 exit_with_message () {
-  echo "${1}, exiting..."
+  echo "${1}, exiting with message..."
   exit $2
 }
 
